@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-# vim 
-=======
 #vim
->>>>>>> b662b7da8f56e2f037d6003db93708253bea7a20
 *.un
+*~
 # Prerequisites
 *.d
 
