@@ -75,8 +75,8 @@ void test_find(){
 }
 
 int main(){
-	//test1();
-	//test_insert();
+	test1();
+	test_insert();
 	test_find();
 	return 0;
 }

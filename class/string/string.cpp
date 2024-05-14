@@ -129,13 +129,14 @@ namespace spig{
 			return tmp;	
 		}	
 		else{
-			string* tmp = new string;
-			tmp->_str = new char[len + 1];
-			memcpy(tmp->_str, _str + pos, len * sizeof(char));
-			tmp->_size = len;
-			tmp->_capacity = len;
-			tmp->_str[_size] = '\0';
-			return *tmp;
+			//这里string是不可以new的，因为new之后没有人对他进行释放
+			string sub;
+			sub.reserve(len);
+			for (size_t i = 0; i < len; i++)
+			{
+				sub += _str[pos + i];
+			}
+			return sub;
 		}
 	}
 	//对代码进行复用
