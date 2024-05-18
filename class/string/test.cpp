@@ -74,10 +74,14 @@ void test_find(){
 	cout << s6 << endl << endl;
 }
 
+void test_1(){
+	string tmp;
+	cin >> tmp;
+	cout << tmp;
+}
+
 int main(){
-	test1();
-	test_insert();
-	test_find();
+	test_1();
 	return 0;
 }
 

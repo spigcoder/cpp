@@ -22,12 +22,15 @@ namespace spig{
 		_size = _capacity = 0;
 	}
 
+	//还有一种写法是使用构造函数来帮助我们完成拷贝构造
 	string::string(const string& s){
-		char* tmp = new char[s._capacity + 1];	
-		strcpy(tmp, s._str);
-		_str = tmp;
-		_size = s._size;
-		_capacity = s._capacity;
+//		char* tmp = new char[s._capacity + 1];	
+//		strcpy(tmp, s._str);
+//		_str = tmp;
+//		_size = s._size;
+//		_capacity = s._capacity;
+		string tmp(s._str);
+		swap(tmp);
 	}
 
 	string& string::operator=(const string& s){
@@ -35,14 +38,26 @@ namespace spig{
 		//是比当前的容量大，大很多，还是小，或者小很多
 		//有几种方法可以解决1.是进行较为仔细的判断然后分类
 		//或者可以直接进行拷贝，然后将之前的内容删除
-		char* tmp = new char[s._capacity + 1];
-		strcpy(tmp, s._str);
-		delete[] _str;
-		_str = tmp;
-		_size = s._size;
-		_capacity = s._capacity;
+//		char* tmp = new char[s._capacity + 1];
+//		strcpy(tmp, s._str);
+	//	delete[] _str;
+	//	_str = tmp;
+	//	_size = s._size;
+	//	_capacity = s._capacity;
+	//	return *this;
+	//
+		if(this != &s){
+			string tmp(s._str);
+			swap(tmp);	
+		}
 		return *this;
 	}
+
+	//这样也可以
+	//string& string::operator=(string tmp){
+	//	swap(tmp);
+	//	return *this;	
+	//}
 
 	void string::insert(size_t pos, const char* str){
 		assert(pos <= _size);	
@@ -209,13 +224,22 @@ namespace spig{
 		}	
 		return os;
 	}
+
+	//这里是有一些问题的，就是说每次进行+=然后再扩容或造成很大的效率上的浪费
 	istream& operator>>(istream& is,  string& s){
 		//首先将显示的内容清空以便下一次显示
 		s.clear();
+		char buff[128];
+		size_t i = 0;
 		//这里使用get才可以获取到‘ ’否则普通的scanf 和cin是不会获取空格的
 		char ch = is.get();
 		while(ch != ' ' && ch != '\n'){
-			s += ch;
+			buff[i++] = ch;
+			if(i == 127){
+				buff[i] = '\0';
+				s += buff;
+				i = 0;	
+			}
 			ch = is.get();	
 		}
 		return is;
