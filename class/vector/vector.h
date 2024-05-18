@@ -3,6 +3,7 @@
 #include <functional>
 #include<iostream>
 #include <pthread.h>
+#include<assert.h>
 using namespace std;
 
 namespace spigcoder {
@@ -132,6 +133,20 @@ namespace spigcoder {
 		_finish++;
 		return _start + old_pos;
 	} 
+	
+	template<typename T>
+	//erase也会出现迭代器失效的问题，所以使用erase时也要注意更新迭代器
+	typename vector<T>::iterator vector<T>::erase(iterator pos){
+		size_t old_pos = pos - _start;
+		assert(old_pos >= 0 && end() - pos > 0);
+		iterator position = pos + 1;
+		while(position <= _finish){
+			*(position - 1) = *(position);
+			position++;
+		}
+		--_finish;
+		return _start + old_pos;	
+	}
 }	
 
 
