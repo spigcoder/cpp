@@ -53,7 +53,8 @@ void test_destory(){
 }
 
 int main(){
-	test_iterator();
+//	test_iterator();
+	test_destory();
 	return 0;
 }
 

@@ -24,12 +24,7 @@ namespace spigcoder {
 			pointer->~T1();
 		}
 		~vector(){ 
-			iterator storage_start = _start;
-			while(_start != _finish){
-				iterator tmp = _start;
-				destory(&(*_start));
-				_start = ++tmp;
-			}
+			delete[] _start;
 		}
 		vector(const vector& x);
 		iterator begin(){ return _start; } 
