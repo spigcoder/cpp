@@ -38,16 +38,24 @@ void test_iterator(){
 }
 
 void test_destory(){
-	spigcoder::vector<string> tmp;
-	tmp.push_back("hello");
-	tmp.push_back("hello");
-	tmp.push_back("hello");
-	tmp.push_back("hello");
-	tmp.push_back("hello");
-	tmp.push_back("hello");
-	tmp.push_back("hello");
+//	spigcoder::vector<string> tmp;
+//	tmp.push_back("hello");
+//	tmp.push_back("hello");
+//	tmp.push_back("hello");
+//	tmp.push_back("hello");
+//	tmp.push_back("hello");
+//	tmp.push_back("hello");
+//	tmp.push_back("hello");
+	spigcoder::vector<vector<int>> tmp;
+	tmp.push_back({1,2,3,4,5,6});
+	tmp.push_back({1,2,3,4,5,6});
+	tmp.push_back({1,2,3,4,5,6});
+	tmp.push_back({1,2,3,4,5,6});
 	for(auto m : tmp){
-		cout << m << " ";
+		for(auto e : m){
+			cout << e << " ";
+		}
+		cout <<endl;
 	}
 	cout << endl;
 }
