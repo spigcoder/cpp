@@ -1,4 +1,5 @@
 #include<assert.h>
+#include<algorithm>
 #include<iostream>
 
 namespace spigcoder{
@@ -73,11 +74,28 @@ namespace spigcoder{
 		using iterator = ListIterator<T, T&, T*>;
 		using const_iterator = ListIterator<const T, const T&, const T*>;
 		using Node = ListNode<T>;
-		list(const T& val = T()){
-			_head = new Node (val);
-			_head->_next = _head;
-			_head->_prev = _head;
+		void empty_init(const T& _val = T());
+		void clear();
+		list(const T val = T()){ empty_init(val); }
+		~list(){ clear(); delete _head; _head = nullptr; }
+		list(list<T>& list1){
+			empty_init(); 
+			for(const auto& e : list1){
+				push_back(e);	
+			}
 		}
+		list<T>& operator=(list<T>& li1){
+			//To construct an existing object, first remove the original, and then construct it
+			//这样写就必须自己手动释放内存
+			//clear();
+			//for(const auto& e : li1){
+			//	push_back(e);	
+			//}
+			//这么写不用自己释放内存，交换之后li1出了作用域析构会释放内存
+			std::swap(_head, li1._head);
+			return *this;
+		}
+		void swap(ListNode<T>* x, ListNode<T>* y);
 		iterator begin() {return iterator(_head->_next); }
 		const_iterator begin() const { return iterator(_head->_next); };
 		iterator end() { return iterator(_head); };
@@ -93,6 +111,28 @@ namespace spigcoder{
 	private:
 		Node* _head;
 	};
+	template<typename T>
+	void list<T>::swap(ListNode<T>* x, ListNode<T>* y){
+		std::swap(x, y);	
+	}
+
+	template<typename T>
+	void list<T>::clear(){
+		auto it = begin();
+		while(it != end()){
+			it = erase(it);	
+		}	
+		_head->_next = _head;
+		_head->_prev = _head;
+	}
+
+	template<typename T>
+	void list<T>::empty_init(const T& _val){
+		_head = new Node(_val);
+		_head->_next = _head;
+		_head->_prev = _head;
+	}
+
 
 	//这里的typename是告诉编译器这是一个类型而不是一个值，在模板参数中涉及typename可以不写
 	//但是模板定义的其他部分涉及依赖名称typename通常是必须的
@@ -137,29 +177,3 @@ namespace spigcoder{
 	} 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
