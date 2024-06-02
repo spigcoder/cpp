@@ -1,5 +1,6 @@
 #include"Date.h"
-#include <ostream>
+#include <iostream>
+#include<vector>
 
 Date::Date(int year, int month, int day){
 	_year = year;
