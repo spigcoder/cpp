@@ -165,15 +165,19 @@ struct __deque_iterator {
     return tmp;
   }
 
+  //向后移动n位
   self& operator+=(difference_type n) {
+    //算去当前节点的首个位置到要找的位置的距离 -> 方便算节点的偏移量
     difference_type offset = n + (cur - first);
     if (offset >= 0 && offset < difference_type(buffer_size()))
       cur += n;
     else {
+      //先算去节点的偏移量
       difference_type node_offset =
         offset > 0 ? offset / difference_type(buffer_size())
                    : -difference_type((-offset - 1) / buffer_size()) - 1;
       set_node(node + node_offset);
+      //更新cur到最新的位置
       cur = first + (offset - node_offset * difference_type(buffer_size()));
     }
     return *this;
@@ -184,6 +188,7 @@ struct __deque_iterator {
     return tmp += n;
   }
 
+  //代码复用从思想，通过-= n == +=（-n)来复用代码
   self& operator-=(difference_type n) { return *this += -n; }
  
   self operator-(difference_type n) const {
@@ -291,6 +296,7 @@ protected:                      // Internal typedefs
   static size_type initial_map_size() { return 8; }
 
 protected:                      // Data members
+  //维护第一个buff和最后一个buff
   iterator start;
   iterator finish;
 
@@ -417,6 +423,7 @@ public:                         // Constructor, destructor.
     const size_type len = size();
     if (&x != this) {
       if (len >= x.size())
+        //copy有一个返回值，指向拷贝的元素的下一个位置，这样就可将多余的元素清除
         erase(copy(x.begin(), x.end(), start), finish);
       else {
         const_iterator mid = x.begin() + difference_type(len);
@@ -427,6 +434,7 @@ public:                         // Constructor, destructor.
     return *this;
   }        
 
+  //内部的swap会比函数库里的好很多
   void swap(deque& x) {
     __STD::swap(start, x.start);
     __STD::swap(finish, x.finish);
@@ -530,6 +538,7 @@ public:                         // Erase
     iterator next = pos;
     ++next;
     difference_type index = pos - start;
+    //根据前后数据的不同，算则移动前面的数据还是后面的数据
     if (index < (size() >> 1)) {
       copy_backward(start, pos, next);
       pop_front();

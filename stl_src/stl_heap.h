@@ -36,11 +36,13 @@ __STL_BEGIN_NAMESPACE
 #pragma set woff 1209
 #endif
 
+//默认构造的都是大堆
 template <class RandomAccessIterator, class Distance, class T>
 void __push_heap(RandomAccessIterator first, Distance holeIndex,
                  Distance topIndex, T value) {
   Distance parent = (holeIndex - 1) / 2;
   while (holeIndex > topIndex && *(first + parent) < value) {
+    //这是将父节点向下移动，value先不放，最后直接将它放到最终的位置
     *(first + holeIndex) = *(first + parent);
     holeIndex = parent;
     parent = (holeIndex - 1) / 2;
