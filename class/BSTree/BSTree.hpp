@@ -26,15 +26,36 @@ private:
     using Node = BSTNode<K>;
 public:
     BSTree(/* args */):_root(nullptr){};
+    BSTree(const BSTree& tree) { 
+        _root = new Node(tree._root->_key);
+        _root->_left = Copy(tree._root->_left);
+        _root->_right = Copy(tree._root->_right);
+     }
     ~BSTree(){ DeStructor(_root); }
+    BSTree& operator=(BSTree bst){
+        swap(bst._root, _root);
+        return *this;
+    }
     void Inorder();
     bool Insert(const K& key);
     bool Erase(const K& key);
     void DeStructor(Node* node);
 private:
     void _Inorder(Node* node);
+    Node* Copy(const Node* node);
     Node* _root; 
 };
+
+template<class K>
+typename BSTree<K>::Node* BSTree<K>::Copy(const Node* node){
+    if(node == nullptr) return nullptr;
+
+    Node* new_node = new Node(node->_key);
+    new_node->_left = Copy(node->_left);
+    new_node->_right = Copy(node->_right);
+
+    return new_node;
+} 
 
 template<class K>
 void BSTree<K>::DeStructor(Node* node){

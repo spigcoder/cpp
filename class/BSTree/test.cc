@@ -11,11 +11,9 @@ void TestInsert(){
     for(auto e : a){
         bst.Insert(e);
     }
-    for(auto e : a){
-        bst.Inorder();
-        bst.Erase(e);
-    }
-    
+    BSTree<int> bt(bst);
+    bt.Inorder();
+    bst.Inorder();
 }
 
 int main(){
