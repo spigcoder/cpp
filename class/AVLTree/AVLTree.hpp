@@ -24,18 +24,49 @@ namespace spigcoder{
     private:
         using Node = AVLNode<K, V>;
         void _Inorder(Node* node);
-    public:
-        AVLTree() = default;
+        bool _IsBalance(Node* root);
         void RotateL(Node* parent);
         void RotateR(Node* parent);
         void RotateLR(Node* parent);
-        void RotateRL(Node* parent);
+        void RotateRL(Node* parent);       
+        int _Height(Node* root);
+    public:
+        AVLTree() = default;
         bool insert(const pair<K, V>& kv);
         Node* find(const pair<K, V>& kv);
         void Inorder() { _Inorder(_root); }
+        bool IsBalance() { return _IsBalance(_root); }
+        int Height() { return _Height(_root); }
     private:
         Node* _root = nullptr;
     };
+
+    template<typename K, typename V>
+    int AVLTree<K, V>::_Height(Node* root){
+        if(root == nullptr) return 0;
+
+        int left_height = _Height(root->_left);
+        int right_height = _Height(root->_right);
+
+        return left_height > right_height ? left_height+1 : right_height+1;
+    }
+
+    template<typename K, typename V>
+    bool AVLTree<K, V>::_IsBalance(Node* root){
+        if(root == nullptr) return true;
+
+        int left_height = _Height(root->_left);
+        int right_height = _Height(root->_right); 
+
+        //这里是判断错误的情况，如果正确，还要递归判断其左右子树
+        if(abs(left_height - right_height) >= 2 || abs(root->_bt) >= 2)
+            return false;
+
+        bool left_is_balance = _IsBalance(root->_left);
+        bool right_is_balance = _IsBalance(root->_right);
+
+        return left_is_balance && right_is_balance;
+    }
 
     template<typename K, typename V>
     void AVLTree<K, V>::_Inorder(Node* node){
