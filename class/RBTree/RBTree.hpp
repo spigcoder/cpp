@@ -44,9 +44,11 @@ namespace spigcoder{
         Node* find(const pair<K, V>& kv);
         void Inorder() { _Inorder(_root); }
         bool IsBalance() { 
+            if(_root == nullptr) return true;
+            if(_root->_col == RED) return false;
             int black_num = 0;
             Node* cur = _root;
-            while(cur->_left){
+            while(cur){
                 if(cur->_col == BLACK) black_num++;
                 cur = cur->_left;
             }
@@ -71,12 +73,19 @@ namespace spigcoder{
     bool RBTree<K, V>::_IsBalance(Node* root, const int& black_num, int cur_black_num){
         if(root == nullptr){
             if(cur_black_num == black_num) return true;
-            else return false;
+            else{
+                cout << "路径上黑节点数量不相同" <<endl;
+                return false;
+            } 
         } 
         if(root->_col == BLACK) cur_black_num++;
 
         if(root->_col == RED) {
-            if(root->_parent->_col == RED) return false;
+            if(root->_parent->_col == RED){ 
+                cout << root->_kv.first << " " << root->_parent->_kv.first << endl;
+                assert(false);
+                return false;
+            }
         }
 
         bool is_balance_left = _IsBalance(root->_left, black_num, cur_black_num);
@@ -114,6 +123,7 @@ namespace spigcoder{
         if(_root == nullptr){
             _root = new Node(kv);
             _root->_col = BLACK;
+            return true;
         }
         //find position to insert
         Node *cur = _root, *parent = _root;

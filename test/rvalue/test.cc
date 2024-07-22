@@ -1,37 +1,29 @@
 #include <iostream>
 using namespace std;
 
-class demo{
-public:
-    demo():num(new int(0)){
-        cout<<"construct!"<<endl;
-    }
-    demo(const demo &d):num(new int(*d.num)){
-        cout<<"copy construct!"<<endl;
-    }
-    //添加移动构造函数
-    demo(demo &&d):num(d.num){
-        cout << num << endl;
-        cout << (d.num) << endl;
-        //这里如果不置空就会出现对指针的二次释放问题
-        d.num = NULL;
-        cout<<"move construct!"<<endl;
-    }
-
-    ~demo(){
-        delete num;
-        cout<<"class destruct!"<<endl;
-    }
-private:
-    int *num;
-};
-demo get_demo(){
-    return demo();
+#include <iostream>
+using namespace std;
+//重载被调用函数，查看完美转发的效果
+void otherdef(int & t) {
+    cout << "lvalue\n";
 }
-int main(){
-    demo a = get_demo();
+void otherdef(int && t) {
+    cout << "rvalue\n";
+}
+//实现完美转发的函数模板
+template <typename T>
+void function(T&& t) {
+    otherdef(forward<T>(t));
+}
+int main()
+{
+    function(5);
+    int  x = 1;
+    function(x);
     return 0;
 }
+
+                        
 
                         
 
