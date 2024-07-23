@@ -15,7 +15,10 @@ struct Node{
 
 void TestSharePtr(){
     shared_ptr<Node> p1(new Node(10));
-
+    cout << p1.get() << endl;
+    shared_ptr<Node> p2(move(p1));
+    cout << p2.get() <<  " " << p2.use_count() << endl;
+    cout << p1.get() << endl;
 }
 
 int main(){
