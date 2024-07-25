@@ -1,2 +1,4 @@
 #pragma once
-constexpr int factorial(int n);
+auto factorial(int n) ->decltype(n){
+    return n;
+}
