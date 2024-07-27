@@ -137,20 +137,20 @@ namespace openlist{
         hash hs;
         size_t sz = _table.size(), hashi = hs(key) % sz; 
         //当这个桶执行的元素历遍完了，如果还是没有找到就证明没有这个元素
-        Node* cur = _table[hashi].get();
+        shared_ptr<Node> cur = _table[hashi];
         while(cur){
-            if(cur->_data.first == key) return cur;
-            else cur = (cur->_next).get();
+            if(cur->_data.first == key) return HashIterator(this, cur);
+            else cur = (cur->_next);
         }
-        return nullptr;
+        return HashIterator(this, nullptr);
     }
 
     //这里扩容时有一个效率的问题，就是我们是像开放定址法一样新创建一个_table
     //然后逐渐进行插入吗，如果是这样的化，那么效率太低，所以可以重复利用原来创建好的指针
     template<typename K, typename V, typename hash>
     bool Hash<K,V,hash>::insert(const pair<K, V>& kv){
-        Node* node = find(kv.first);
-        if(node) return false;
+        HashIterator node = find(kv.first);
+        if(node) ;
         hash hs;
         size_t old_sz = _table.size();
         //当桶中元素的数量和桶的数量相同时进行扩容操作
@@ -179,6 +179,28 @@ namespace openlist{
         new_node->_next = move(old_node);
         _table[hashi] = move(new_node);
         _n++;
+    }
+
+    template<typename K, typename V, typename hash>
+    bool Hash<K,V,hash>::erase(const K& key){
+        hash hs;
+        size_t sz = _table.size(), hashi = hs(key)%sz;
+        shared_ptr<Node> cur = _table[hashi];
+        shared_ptr<Node> prev;
+        while(cur){
+            if(cur->_data.first == key){
+                if(!prev) {
+                    _table[hashi] = move(cur->_next);
+                }
+                else{
+                    prev->_next = move(cur->_next);
+                }
+                return true;
+            }
+            prev = cur;
+            cur = cur->_next;
+        } 
+        return false;
     }
 }
 
