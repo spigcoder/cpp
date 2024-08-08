@@ -9,7 +9,7 @@ template<size_t N>
 class BitMap{
 public:
     BitMap(){
-        _bit_map.resize(N);
+        _bit_map.resize(N/RANGE+1);
     }
 
     //将x对应的位设置为0

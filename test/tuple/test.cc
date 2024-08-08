@@ -1,20 +1,59 @@
 #include <tuple>
 #include <string>
 #include <iostream>
+#include <functional>
 using namespace std;
 
-void TestTuple(){
-    tuple<int, string, double> i_str(10, "hello tuple", 6.66);
-    cout << tuple_size<decltype(i_str)>::value << endl;
-    cout << get<0>(i_str) << " " << get<1>(i_str) << " " << get<2>(i_str) << endl;
-    int x = 0;
-    string str = "";
-    double d;
-    tie(x, str, d) = i_str;
-    cout << x << str << d;
+// 使用举例
+
+
+double Division(int a, int b)
+{
+ // 当b == 0时抛出异常
+
+ if (b == 0)
+ {
+ throw "Division by zero condition!";
+ }
+ return (double)a / (double)b;
 }
 
-int main(){
-    TestTuple();
-    return 0;
+void Func()
+{
+ // 这里可以看到如果发生除0错误抛出异常，另外下面的array没有得到释放。
+
+ // 所以这里捕获异常后并不处理异常，异常还是交给外面处理，这里捕获了再
+
+ // 重新抛出去。
+
+ int* array = new int[10];
+ try {
+ int len, time;
+ cin >> len >> time;
+ cout << Division(len, time) << endl;
+ }
+ catch (...)
+ {
+ cout << "delete []" << array << endl;
+ delete[] array;
+ throw;
+ }
+ // ...
+
+ cout << "delete []" << array << endl;
+ delete[] array;
+}
+
+int main()
+{
+ try
+
+ {
+ Func();
+ }
+ catch (const char* errmsg)
+ {
+ cout << errmsg << endl;
+ }
+ return 0;
 }
